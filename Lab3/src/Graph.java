@@ -4,9 +4,10 @@ public class Graph {
 
     ArrayList<Node> nodes = new ArrayList<>();
     ArrayList<Edge> edges = new ArrayList<>();
+    String name;
 
-    public Graph(){
-
+    public Graph(String name){
+        this.name = name;
     }
 
     public Graph(Edge[] edges){
@@ -47,6 +48,10 @@ public class Graph {
 
     public ArrayList getEdges(){    // get the edges of the graph
         return edges;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
 }

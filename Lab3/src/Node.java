@@ -5,10 +5,12 @@ public class Node {
     ArrayList<Edge> edges = new ArrayList<>();
     int inDegree;
     int outDegree;
+    String name;
 
-    public Node(){  // constructor
+    public Node(String name){  // constructor
         this.inDegree = 0;
         this.outDegree = 0;
+        this.name = name;
     }
 
     public ArrayList getEdges(){
@@ -29,5 +31,9 @@ public class Node {
     }
     public int getOutDegree(){  // get OutDegree
         return this.outDegree;
+    }
+
+    public String getName() {
+        return this.name;
     }
 }

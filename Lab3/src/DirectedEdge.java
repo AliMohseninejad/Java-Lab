@@ -6,14 +6,17 @@ public class DirectedEdge extends Edge{
     Node outNode;
 
     boolean hasNodes;   // If true, the edge already has two nodes
+    String name;
 
-    public DirectedEdge(){  // normal constructor
+    public DirectedEdge(String name){  // normal constructor
         this.hasNodes = false;
+        this.name = name;
     }
 
-    public DirectedEdge(Node inNode, Node outNode){ // constructor with initialization
+    public DirectedEdge(String name, Node inNode, Node outNode){ // constructor with initialization
 
         this.hasNodes = true;
+        this.name = name;
         this.inNode = inNode;
         this.outNode = outNode;
 
@@ -46,4 +49,9 @@ public class DirectedEdge extends Edge{
         inNode.inDegree ++;
         outNode.outDegree ++;
     }
+
+    public String getName() {
+        return this.name;
+    }
+
 }
