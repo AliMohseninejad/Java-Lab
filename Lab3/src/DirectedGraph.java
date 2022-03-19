@@ -2,9 +2,8 @@
 
 public class DirectedGraph extends Graph{
 
-    @Override
-    public void addEdge() {
-        super.addEdge();
+    public void addEdge(DirectedEdge e1) {
+        super.addEdge(e1);
 
     }
 }

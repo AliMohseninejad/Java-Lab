@@ -6,27 +6,28 @@ public class Node {
     int inDegree;
     int outDegree;
 
-    public Node(){
+    public Node(){  // constructor
         this.inDegree = 0;
         this.outDegree = 0;
     }
 
     public ArrayList getEdges(){
         return edges;
+    }   // returns the edges
+
+    public void addEdge(Edge e1){   // add an edge to the list
+        if (!edges.contains(e1))
+            edges.add(e1);
     }
 
-    public void addEdge(){
-
+    public void removeEdge(Edge e1){    // remove an edge
+        edges.remove(e1);
     }
 
-    public void removeEdge(){
-
-    }
-
-    public int getInDegree(){
+    public int getInDegree(){   // get InDegree
         return this.inDegree;
     }
-    public int getOutDegree(){
+    public int getOutDegree(){  // get OutDegree
         return this.outDegree;
     }
 }

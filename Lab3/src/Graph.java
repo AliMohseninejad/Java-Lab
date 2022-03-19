@@ -14,27 +14,38 @@ public class Graph {
     }
 
 
-    public void addNode(){
-
+    public void addNode(Node n1){   // adds a single node to graph
+        if (!nodes.contains(n1))    // checks if the node was already in the nodes list
+            nodes.add(n1);
     }
 
-    public void addEdge(){
+    public void addEdge(Edge e1){   // adds an edge and its corresponding nodes to the graph
+        if (!edges.contains(e1)) {
+            edges.add(e1);
 
+            Node[] inOutNode = e1.getter();
+
+            if (!nodes.contains(inOutNode[0]))
+                nodes.add(inOutNode[0]);
+            if (!nodes.contains(inOutNode[1]))
+                nodes.add(inOutNode[1]);
+
+        }
     }
 
-    public void removeNode(){
-
+    public void removeNode(Node n1){    // remove a node from the graph
+        nodes.remove(n1);
     }
 
-    public void removeEdge(){
-
+    public void removeEdge(Edge e1){    // remove an edge from the graph
+        edges.remove(e1);
     }
 
-    public ArrayList getNodes(){
+    public ArrayList getNodes(){    // get the nodes of the graph
         return nodes;
     }
 
-    public ArrayList getEdges(){
+    public ArrayList getEdges(){    // get the edges of the graph
         return edges;
     }
 
