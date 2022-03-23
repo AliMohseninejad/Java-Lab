@@ -7,5 +7,9 @@ public class Tree extends DirectedGraph {
         super(name);
     }
 
-    
+    public Tree(String name, DirectedEdge[] edges) {
+        super(name, edges);
+    }
+
+
 }

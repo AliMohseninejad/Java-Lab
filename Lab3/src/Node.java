@@ -17,12 +17,34 @@ public class Node {
         return edges;
     }   // returns the edges
 
-    public void addEdge(Edge e1){   // add an edge to the list
-        if (!edges.contains(e1))
+    public void addEdge(Edge e1, boolean isIn){   // add an edge to the list
+        if (!edges.contains(e1)) {
             edges.add(e1);
+            if (e1.getClass().getName().equals("DirectedEdge")) {
+                if (isIn)
+                    this.inDegree ++;
+                else
+                    this.outDegree ++;
+            }
+            else {
+                this.inDegree ++;
+                this.outDegree ++;
+            }
+        }
     }
 
-    public void removeEdge(Edge e1){    // remove an edge
+    public void removeEdge(Edge e1, boolean isIn){    // remove an edge
+
+        if (e1.getClass().getName().equals("DirectedEdge")) {
+            if (isIn)
+                this.inDegree --;
+            else
+                this.outDegree --;
+        }
+        else {
+            this.inDegree --;
+            this.outDegree --;
+        }
         edges.remove(e1);
     }
 

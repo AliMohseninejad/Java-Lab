@@ -18,6 +18,8 @@ public class Graph {
                 this.edges.add(edges[k]);
 
                 Node[] inOutNode = edges[k].getter();
+                inOutNode[0].addEdge(edges[k], true);
+                inOutNode[1].addEdge(edges[k], false);
 
                 if (!this.nodes.contains(inOutNode[0]))
                     this.nodes.add(inOutNode[0]);
@@ -39,12 +41,13 @@ public class Graph {
             this.edges.add(e1);
 
             Node[] inOutNode = e1.getter();
+            inOutNode[0].addEdge(e1, true);
+            inOutNode[1].addEdge(e1, false);
 
             if (!this.nodes.contains(inOutNode[0]))
                 this.nodes.add(inOutNode[0]);
             if (!this.nodes.contains(inOutNode[1]))
                 this.nodes.add(inOutNode[1]);
-
         }
     }
 
@@ -53,6 +56,11 @@ public class Graph {
     }
 
     public void removeEdge(Edge e1){    // remove an edge from the graph
+
+        Node[] inOutNode = e1.getter();
+        inOutNode[0].removeEdge(e1, true);
+        inOutNode[1].removeEdge(e1, false);
+
         this.edges.remove(e1);
     }
 
