@@ -14,8 +14,7 @@ public class main {
         DirectedEdge e4 = new DirectedEdge("e4", n3, n4);
         UndirectedEdge e5 = new UndirectedEdge("e5", n2, n4);
 
-        Edge edges[] = {e1,e2,e3,e4,e5};
-        DirectedEdge dEdges[] = {e1,e2,e3,e4};
+        DirectedEdge[] dEdges = {e1,e2,e3,e4};
 
         DirectedGraph g1 = new DirectedGraph("g1");
         DirectedGraph g2 = new DirectedGraph("g2", dEdges);
@@ -35,29 +34,29 @@ public class main {
 
         System.out.println("g1:\n");
         System.out.println("The Nodes:");
-        for (int k=0; k<g1_nodes.size(); k++) {
-            System.out.print(g1_nodes.get(k).getName());
-            System.out.print("\tIn Degree: " + g1_nodes.get(k).getInDegree());
-            System.out.println("\tOut Degree: " + g1_nodes.get(k).getOutDegree() + "\n");
+        for (Node g1_node : g1_nodes) {
+            System.out.print(g1_node.getName());
+            System.out.print("\tIn Degree: " + g1_node.getInDegree());
+            System.out.println("\tOut Degree: " + g1_node.getOutDegree() + "\n");
         }
 
         System.out.println("The Edges:");
-        for (int k=0; k<g1_edges.size(); k++) {
-            System.out.println(g1_edges.get(k).getName());
+        for (Edge g1_edge : g1_edges) {
+            System.out.println(g1_edge.getName());
         }
 
 
         System.out.println("\n\ng2:\n");
         System.out.println("The Nodes:");
-        for (int k=0; k<g2_nodes.size(); k++) {
-            System.out.print(g2_nodes.get(k).getName());
-            System.out.print("\tIn Degree: " + g2_nodes.get(k).getInDegree());
-            System.out.println("\tOut Degree: " + g2_nodes.get(k).getOutDegree() + "\n");
+        for (Node g2_node : g2_nodes) {
+            System.out.print(g2_node.getName());
+            System.out.print("\tIn Degree: " + g2_node.getInDegree());
+            System.out.println("\tOut Degree: " + g2_node.getOutDegree() + "\n");
         }
 
         System.out.println("The Edges:");
-        for (int k=0; k<g2_edges.size(); k++) {
-            System.out.println(g2_edges.get(k).getName());
+        for (Edge g2_edge : g2_edges) {
+            System.out.println(g2_edge.getName());
         }
     }
 }

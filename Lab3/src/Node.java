@@ -7,13 +7,17 @@ public class Node {
     int outDegree;
     String name;
 
+    // used by the class "Tree"
+    Node father = null;
+    ArrayList<Node> children = new ArrayList<>();
+
     public Node(String name){  // constructor
         this.inDegree = 0;
         this.outDegree = 0;
         this.name = name;
     }
 
-    public ArrayList getEdges(){
+    public ArrayList<Edge> getEdges(){
         return edges;
     }   // returns the edges
 

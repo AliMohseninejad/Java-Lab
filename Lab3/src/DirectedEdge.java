@@ -20,8 +20,7 @@ public class DirectedEdge extends Edge{
     }
 
     public Node[] getter(){ // get the nodes
-        Node[] nodes = {inNode, outNode};
-        return nodes;
+        return new Node[]{inNode, outNode};
     }
 
     public void setter(Node inNode, Node outNode){  // set the nodes if not set with constructor

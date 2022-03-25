@@ -13,13 +13,13 @@ public class Graph {
     public Graph(String name, Edge[] edges){
         this.name = name;
 
-        for(int k=0; k<edges.length; k++){
-            if (!this.edges.contains(edges[k])){
-                this.edges.add(edges[k]);
+        for (Edge edge : edges) {
+            if (!this.edges.contains(edge)) {
+                this.edges.add(edge);
 
-                Node[] inOutNode = edges[k].getter();
-                inOutNode[0].addEdge(edges[k], true);
-                inOutNode[1].addEdge(edges[k], false);
+                Node[] inOutNode = edge.getter();
+                inOutNode[0].addEdge(edge, true);
+                inOutNode[1].addEdge(edge, false);
 
                 if (!this.nodes.contains(inOutNode[0]))
                     this.nodes.add(inOutNode[0]);
@@ -64,11 +64,11 @@ public class Graph {
         this.edges.remove(e1);
     }
 
-    public ArrayList getNodes(){    // get the nodes of the graph
+    public ArrayList<Node> getNodes(){    // get the nodes of the graph
         return this.nodes;
     }
 
-    public ArrayList getEdges(){    // get the edges of the graph
+    public ArrayList<Edge> getEdges(){    // get the edges of the graph
         return this.edges;
     }
 
