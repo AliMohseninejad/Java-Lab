@@ -41,4 +41,40 @@ public class Tree extends DirectedGraph {
         }
         return ancestors;
     }
+
+    public ArrayList<DirectedEdge> getPath(Node n1, Node n2) {
+        ArrayList<Node> n1_ancestors = getAncestors(n1);
+        ArrayList<Node> n2_ancestors = getAncestors(n2);
+
+        // Check if any of the two nodes is the other one's ancestor
+        ArrayList<DirectedEdge> path = new ArrayList<>();
+        if (n1_ancestors.contains(n2)) {
+            Node currentNode = n1;
+            while(!currentNode.equals(n2)) {
+                path.add(0, findInEdge(currentNode));
+                currentNode = currentNode.father;
+            }
+
+            return path;
+        }
+        else if (n2_ancestors.contains(n1)) {
+            Node currentNode = n2;
+            while(!currentNode.equals(n1)) {
+                path.add(0, findInEdge(currentNode));
+                currentNode = currentNode.father;
+            }
+            return path;
+        }
+
+        return null;
+    }
+
+    private DirectedEdge findInEdge(Node n1) {  // returns the incoming edge to a node from its father
+
+        for(Edge e : n1.getEdges())
+            if (n1.father.getEdges().contains(e))
+                return (DirectedEdge) e;
+
+        return null;
+    }
 }
