@@ -12,13 +12,12 @@ public class DirectedGraph extends Graph{
     }
 
     @Override
-    public void addEdge(Edge e1) {
+    public void addEdge(Edge e1) {  // when the edge is undirected, don't add it.
 
     }
 
-    public void addEdge(DirectedEdge e1) {
+    public void addEdge(DirectedEdge e1) {  // only add the edge if it is directed.
         super.addEdge(e1);
-        System.out.println(e1.getClass().getName());
     }
 
 }
