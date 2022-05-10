@@ -62,12 +62,12 @@ public class MyLinkedList<E> {
     public void remove(int idx) {
         if (idx >= this.len)
             throw new ArrayIndexOutOfBoundsException("index out of bounds!");
-        else if (idx == this.len-1) 
-            this.remove();
         else if (idx == 0) {
             this.head = this.head.next;
             this.len--;
         }
+        else if (idx == this.len-1)
+            this.remove();
         else {
             Node temp = this.head;
             for (int k=0; k<idx-1; k++) {

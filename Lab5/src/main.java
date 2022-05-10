@@ -5,8 +5,8 @@ public class main {
     public static void main(String[] args) throws CloneNotSupportedException {
 
     //    test_MyArrayList();
-        test_MyLinkedList();
-
+    //    test_MyLinkedList();
+        test_MySet();
     }
 
     public static void test_MyArrayList() {
@@ -26,13 +26,13 @@ public class main {
     }
 
     public static void test_MyLinkedList() throws CloneNotSupportedException{
-        MyLinkedList<Integer> linkedList1 = new MyLinkedList<>();
+        MyLinkedList<Double> linkedList1 = new MyLinkedList<>();
 
-        linkedList1.insert(1, 0);
-        linkedList1.insert(2);
-        linkedList1.insert(3,0);
-        linkedList1.insert(4,1);
-        linkedList1.insert(5,4);
+        linkedList1.insert(1.0, 0);
+        linkedList1.insert(2.0);
+        linkedList1.insert(3.0,0);
+        linkedList1.insert(4.0,1);
+        linkedList1.insert(5.0,4);
 
         System.out.println("\n\n*** linkedList ***\n");
 
@@ -48,6 +48,25 @@ public class main {
         for (int i=0; i< linkedList1.len(); i++)
             System.out.println("item at index=" + i + ": "+ linkedList1.get(i));
         System.out.println("len:" + linkedList1.len());
+    }
+
+    public static void test_MySet(){
+        MySet<Integer> set1 = new MySet<>();
+
+        set1.add(2);
+        set1.add(4);
+        set1.add(3);
+        set1.add(2);
+        set1.add(4);
+        set1.printAll();
+        System.out.println();
+
+        set1.remove(2);
+        set1.printAll();
+        System.out.println();
+
+        System.out.println(set1.checkForDuplicate(2));
+        System.out.println(set1.checkForDuplicate(3));
     }
 
 }
