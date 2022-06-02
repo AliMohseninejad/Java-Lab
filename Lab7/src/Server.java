@@ -18,7 +18,7 @@ public class Server {
 
             s = ss.accept();
 
-            System.out.println("Client " + i + " is connected to server!");
+            System.out.println("client " + i + " is connected to server!");
 
             DataInputStream dis = new DataInputStream(s.getInputStream());
             DataOutputStream dos = new DataOutputStream(s.getOutputStream());
@@ -72,6 +72,8 @@ class ClientHandler implements Runnable {
 
                 String receiver = received.substring(received.indexOf("#")+1);
                 String message = received.substring(0, received.indexOf("#"));
+
+                System.out.println("***** message: " + message + " ***** from: " + this.username + " ***** to: " + receiver);
 
                 for (ClientHandler h: Server.clients) {
                     if (h.username.equals(receiver) && h.isLoggedIn) {
