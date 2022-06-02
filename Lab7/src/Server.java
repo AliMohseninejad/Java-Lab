@@ -18,6 +18,8 @@ public class Server {
 
             s = ss.accept();
 
+            System.out.println("Client " + i + " is connected to server!");
+
             DataInputStream dis = new DataInputStream(s.getInputStream());
             DataOutputStream dos = new DataOutputStream(s.getOutputStream());
 
