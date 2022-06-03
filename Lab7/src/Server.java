@@ -7,11 +7,13 @@ import java.util.ArrayList;
 
 public class Server {
 
+    // stores a list of all clients in the memory
     static ArrayList<ClientHandler> clients = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
 
         ServerSocket ss = new ServerSocket(1234);
+        System.out.println("Server is up on port 1234");
         Socket s;
         int i = 0;
         while (true) {
@@ -23,6 +25,7 @@ public class Server {
             DataInputStream dis = new DataInputStream(s.getInputStream());
             DataOutputStream dos = new DataOutputStream(s.getOutputStream());
 
+            // main class to handle every new client
             ClientHandler handler = new ClientHandler(s, dis, dos, "client "+i);
             Thread t = new Thread(handler);
 
@@ -37,11 +40,27 @@ public class Server {
 
 class ClientHandler implements Runnable {
 
+    // username and password
     private String username = "";
     private String password = "";
 
+    // is true after signing up
+    private boolean isSignedUp = false;
+
+    // client which sent connection request to you
+    public ClientHandler reqFrom = null;
+    // client which you sent connection request to
+    public ClientHandler reqTo = null;
+    // client which you are connected to
+    public ClientHandler recipient = null;
+    // if true, the server is waiting for a response from the client
+    public boolean requestFromServer = false;
+
     Socket s;
+
+    // this says if client is online or not
     boolean isLoggedIn;
+
     final DataInputStream dis;
     final DataOutputStream dos;
 
@@ -56,42 +75,195 @@ class ClientHandler implements Runnable {
     @Override
     public void run() {
 
-        String received;
-        while (true) {
+        try {
+            // asking for username and passport
+            authentication();
 
-            try {
+            String received;
+
+            while (true) {
+
+                // read client input
                 received = dis.readUTF();
 
-                System.out.println(received);
-
-                if (received.equals("logout")) {
+                // answer to connection request
+                if (this.reqFrom != null) {
+                    this.reqFrom.receiveAccepted(received.equals("Y"));
+                    this.reqFrom = null;
+                    this.requestFromServer = false;
+                }
+                // client goes offline
+                else if (received.equals("--logout")) {
+                    System.out.println("User " + username + " logged out.");
                     this.isLoggedIn = false;
                     this.s.close();
                     break;
                 }
-
-                String receiver = received.substring(received.indexOf("#")+1);
-                String message = received.substring(0, received.indexOf("#"));
-
-                System.out.println("***** message: " + message + " ***** from: " + this.username + " ***** to: " + receiver);
-
-                for (ClientHandler h: Server.clients) {
-                    if (h.username.equals(receiver) && h.isLoggedIn) {
-                        h.dos.writeUTF(this.username + ": " + message);
-                        break;
+                // print the list of all clients on the server
+                else if (received.equals(("--list")) || received.equals(("--list on")) || received.equals(("--list off"))) {
+                    dos.writeUTF("****************************************************");
+                    for (ClientHandler h : Server.clients) {
+                        if (h.isSignedUp)
+                            if (h.isLoggedIn) {
+                                if (!received.equals(("--list off")))
+                                    dos.writeUTF(h.username + "\t\t\t Online");
+                            }
+                            else {
+                                if (!received.equals(("--list on")))
+                                    dos.writeUTF(h.username + "\t\t\t Offline");
+                            }
+                    }
+                    dos.writeUTF("****************************************************");
+                }
+                // connect two clients
+                else if (received.equals("--connect")) {
+                    sendConnectionRequest();
+                }
+                else {
+                    // invalid command
+                    if (this.recipient == null) {
+                        this.dos.writeUTF("Invalid argument!");
+                    }
+                    // chat
+                    else {
+                        System.out.println("\"" + received + "\" said " + this.username + " to " + this.recipient.username);
+                        this.recipient.dos.writeUTF(this.username + ": " + received);
                     }
                 }
             }
-            catch (IOException e) {
-                e.printStackTrace();
+        }
+        // handling client disconnection
+        catch (IOException e) {
+            try {
+                this.s.close();
+                System.out.println("User " + username + " disconnected.");
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
         }
-        try {
-            this.dis.close();
-            this.dos.close();
+        // close data streams
+        finally {
+            try {
+                this.dis.close();
+                this.dos.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
-        catch (IOException e) {
-            e.printStackTrace();
+
+    }
+
+    private void authentication() throws IOException {
+        // This method gets the username and password of client
+
+        String received;
+        dos.writeUTF("please enter your username..");
+
+        outerLoop:
+        while (true) {
+
+            // get username
+            received = dis.readUTF();
+            for (ClientHandler h: Server.clients) {
+                if (h.username.equals(received) && h.isLoggedIn) {
+                    dos.writeUTF("This username is already taken. Please enter another username..");
+                    continue outerLoop;
+                }
+            }
+            username = received;
+            dos.writeUTF("Your username is \"" + received + "\"");
+            break;
+        }
+
+        dos.writeUTF("please enter your password..");
+
+        while (true) {
+            // get password
+            received = dis.readUTF();
+            // password strength check
+            /////////////////////////////
+            // password hashing
+            /////////////////////////////
+            dos.writeUTF("You are now logged in!");
+
+            isSignedUp = true;
+            System.out.println("User " + username + " is logged in");
+
+            // print the list of commands for client
+            dos.writeUTF("Type \"--logout\" to logout!");
+            dos.writeUTF("Type \"--list\" to list all users!");
+            dos.writeUTF("Type \"--list on\" to list all online users!");
+            dos.writeUTF("Type \"--list off\" to list all offline users!");
+            dos.writeUTF("Type \"--connect\" to connect to an online user!");
+            break;
+        }
+    }
+
+    private void sendConnectionRequest() throws IOException{
+        // this method sends the connection request to other client
+
+        String received;
+        dos.writeUTF("Which user would you like to chat with?");
+
+        outerLoop:
+        while (true) {
+            received = dis.readUTF();
+
+            if (received.equals(this.username)) {
+                dos.writeUTF("You can not chat with yourself! please enter another username!");
+                continue;
+            }
+
+            // check which client has the specified username
+            for (ClientHandler h: Server.clients) {
+                if (h.username.equals(received) && h.isLoggedIn) {
+                    dos.writeUTF("Sending request to " + h.username);
+
+                    this.reqTo = h;
+                    // current client request is sent to the specified client
+                    h.reqFrom = this;
+                    h.dos.writeUTF(username + " would like to chat with you. (Y/n)?");
+
+                    break outerLoop;
+                }
+            }
+            dos.writeUTF("Invalid username! please enter another username!");
+        }
+    }
+
+    public void receiveAccepted(boolean accepted) throws IOException{
+        // after the reply to connection request, this method is called for final arrangement
+
+        if (accepted) {
+            // if request is accepted
+
+            // the previous connections should close for current client
+            if (this.recipient != null) {
+                System.out.println(username + " is disconnected from " + this.recipient.username);
+                dos.writeUTF("You are now disconnected from " + this.recipient.username);
+                this.recipient.dos.writeUTF("You are disconnected from " + this.username);
+                this.recipient.recipient = null;
+            }
+
+            // the previous connections should close for target client
+            if (this.reqTo.recipient != null) {
+                System.out.println(this.reqTo.username + " is disconnected from " + this.reqTo.recipient.username);
+                this.reqTo.dos.writeUTF("You are now disconnected from " + this.reqTo.recipient.username);
+                this.reqTo.recipient.dos.writeUTF("You are disconnected from " + this.reqTo.username);
+                this.reqTo.recipient.recipient = null;
+            }
+
+            // connection is established
+            System.out.println(username + " is connected to " + reqTo.username);
+            reqTo.dos.writeUTF("You are successfully connected to " + username);
+            dos.writeUTF("Request accepted! You are successfully connected to " + reqTo.username);
+            this.recipient = reqTo;
+            reqTo.recipient = this;
+            this.reqTo = null;
+        }
+        // request rejected
+        else {
+            dos.writeUTF("Request rejected! Try again later!");
         }
     }
 }
