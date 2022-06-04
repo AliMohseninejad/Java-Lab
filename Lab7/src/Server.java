@@ -43,7 +43,7 @@ public class Server {
 class ClientHandler implements Runnable {
 
     // username and password
-    private String username = "";
+    private String username;
     private String password = "";
 
     // is true after signing up
