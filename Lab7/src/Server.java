@@ -3,6 +3,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 public class Server {
@@ -53,8 +55,6 @@ class ClientHandler implements Runnable {
     public ClientHandler reqTo = null;
     // client which you are connected to
     public ClientHandler recipient = null;
-    // if true, the server is waiting for a response from the client
-    public boolean requestFromServer = false;
 
     Socket s;
 
@@ -90,11 +90,12 @@ class ClientHandler implements Runnable {
                 if (this.reqFrom != null) {
                     this.reqFrom.receiveAccepted(received.equals("Y"));
                     this.reqFrom = null;
-                    this.requestFromServer = false;
                 }
                 // client goes offline
                 else if (received.equals("--logout")) {
                     System.out.println("User " + username + " logged out.");
+                    this.recipient.recipient = null;
+                    this.recipient = null;
                     this.isLoggedIn = false;
                     this.s.close();
                     break;
@@ -135,6 +136,9 @@ class ClientHandler implements Runnable {
         // handling client disconnection
         catch (IOException e) {
             try {
+                this.isLoggedIn = false;
+                this.recipient.recipient = null;
+                this.recipient = null;
                 this.s.close();
                 System.out.println("User " + username + " disconnected.");
             } catch (IOException ex) {
@@ -156,46 +160,156 @@ class ClientHandler implements Runnable {
     private void authentication() throws IOException {
         // This method gets the username and password of client
 
-        String received;
         dos.writeUTF("please enter your username..");
 
-        outerLoop:
+        String received;
         while (true) {
-
             // get username
             received = dis.readUTF();
-            for (ClientHandler h: Server.clients) {
-                if (h.username.equals(received) && h.isLoggedIn) {
-                    dos.writeUTF("This username is already taken. Please enter another username..");
-                    continue outerLoop;
-                }
+            String signInStatus = usernameVerification(received);
+
+            if (signInStatus.equals("declined"))
+                continue;
+            else if (signInStatus.equals("signup")) {
+                passwordSignIn("Up");
             }
+            else {
+                passwordSignIn("In");
+                Server.clients.remove(getPreviousInstance(received));
+            }
+
             username = received;
             dos.writeUTF("Your username is \"" + received + "\"");
             break;
         }
 
-        dos.writeUTF("please enter your password..");
+        isSignedUp = true;
+        System.out.println("User " + username + " is logged in");
 
+        // print the list of commands for client
+        dos.writeUTF("Type \"--logout\" to logout!");
+        dos.writeUTF("Type \"--list\" to list all users!");
+        dos.writeUTF("Type \"--list on\" to list all online users!");
+        dos.writeUTF("Type \"--list off\" to list all offline users!");
+        dos.writeUTF("Type \"--connect\" to connect to an online user!");
+    }
+
+    private ClientHandler getPreviousInstance(String received) {
+        for (ClientHandler h: Server.clients) {
+            if (h.username.equals(received)) {
+                return h;
+            }
+        }
+        return null;
+    }
+
+    private String usernameVerification(String received) throws IOException{
+
+        for (ClientHandler h: Server.clients) {
+            if (h.username.equals(received)) {
+                if (h.isLoggedIn && h.isSignedUp) {
+                    // the user is online
+                    dos.writeUTF("This user is currently online. Please enter another username..");
+                    return "declined";
+                }
+                else if (!h.isLoggedIn && h.isSignedUp) {
+                    // log in
+                    dos.writeUTF("Logging in as " + h.username);
+                    password = h.password;
+                    return "login";
+                }
+                else {
+                    // sign up
+                    dos.writeUTF("Signing up..");
+                    return "signup";
+                }
+            }
+        }
+        dos.writeUTF("Signing up..");
+        return "signup";
+    }
+
+    private void passwordSignIn(String inOrUp) throws IOException {
+
+        dos.writeUTF("please enter your password..");
+        String received;
         while (true) {
             // get password
             received = dis.readUTF();
-            // password strength check
-            /////////////////////////////
+
+            if (inOrUp.equals("Up")) {
+                // password strength check
+                if (!passwordStrengthCheck(received)) {
+                    dos.writeUTF("Password should contain at least 8 characters, containing lowercase, uppercase and numbers!");
+                    dos.writeUTF("Please re enter your password..");
+                    continue;
+                }
+            }
+
             // password hashing
-            /////////////////////////////
-            dos.writeUTF("You are now logged in!");
+            String temp = passwordHashing(received);
+            if (temp != null) {
+                if (inOrUp.equals("Up")) {
+                    dos.writeUTF("You are now Signed up!");
+                    password = temp;
+                }
+                else {
+                    // verifying password for authentication
+                    if (temp.equals(password)) {
+                        dos.writeUTF("You are now logged in!");
+                    }
+                    else {
+                        dos.writeUTF("Wrong password! Please try again!");
+                        continue;
+                    }
+                }
+                break;
+            }
+            else {
+                dos.writeUTF("Something went wrong! please try another password!");
+                password = "";
+            }
+        }
+    }
 
-            isSignedUp = true;
-            System.out.println("User " + username + " is logged in");
 
-            // print the list of commands for client
-            dos.writeUTF("Type \"--logout\" to logout!");
-            dos.writeUTF("Type \"--list\" to list all users!");
-            dos.writeUTF("Type \"--list on\" to list all online users!");
-            dos.writeUTF("Type \"--list off\" to list all offline users!");
-            dos.writeUTF("Type \"--connect\" to connect to an online user!");
-            break;
+    private boolean passwordStrengthCheck(String password) {
+        if (password.length() < 8)
+            return false;
+
+        boolean hasUpperCase = false;
+        boolean hasLowerCase = false;
+        boolean hasNumber = false;
+        char[] ch = password.toCharArray();
+        for (char c: ch) {
+            if (Character.isUpperCase(c))
+                hasUpperCase = true;
+            else if (Character.isLowerCase(c))
+                hasLowerCase = true;
+            else if (Character.isDigit(c))
+                hasNumber = true;
+
+            if (hasLowerCase && hasUpperCase && hasNumber)
+                return true;
+        }
+        return false;
+    }
+
+    private String passwordHashing(String password) {
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA");
+            messageDigest.update(password.getBytes());
+            byte[] resultByteArray = messageDigest.digest();
+            StringBuilder sb = new StringBuilder();
+
+            for (byte b : resultByteArray) {
+                sb.append(String.format("%02x", b));
+            }
+
+            return sb.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            return null;
         }
     }
 
