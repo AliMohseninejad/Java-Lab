@@ -94,7 +94,10 @@ class ClientHandler implements Runnable {
                 // client goes offline
                 else if (received.equals("--logout")) {
                     System.out.println("User " + username + " logged out.");
-                    this.recipient.recipient = null;
+                    if (this.recipient != null) {
+                        this.recipient.recipient = null;
+                        this.recipient.dos.writeUTF(this.username + " is disconnected");
+                    }
                     this.recipient = null;
                     this.isLoggedIn = false;
                     this.s.close();
@@ -137,7 +140,10 @@ class ClientHandler implements Runnable {
         catch (IOException e) {
             try {
                 this.isLoggedIn = false;
-                this.recipient.recipient = null;
+                if (this.recipient != null) {
+                    this.recipient.recipient = null;
+                    this.recipient.dos.writeUTF(this.username + " is disconnected");
+                }
                 this.recipient = null;
                 this.s.close();
                 System.out.println("User " + username + " disconnected.");
