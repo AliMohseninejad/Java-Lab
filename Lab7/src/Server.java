@@ -1,6 +1,7 @@
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.MessageDigest;
@@ -15,7 +16,8 @@ public class Server {
     public static void main(String[] args) throws IOException {
 
         ServerSocket ss = new ServerSocket(1234);
-        System.out.println("Server is up on port 1234");
+        String ipAddress = InetAddress.getLocalHost().toString();
+        System.out.println("Server is up on " + ipAddress + " port 1234");
         Socket s;
         int i = 0;
         while (true) {
