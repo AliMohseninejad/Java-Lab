@@ -41,7 +41,7 @@ public class ClientSocket implements Runnable{
             //Log.i("hostIP", ip.toString());
             Log.i("hostIPStr", hostIp);
             Socket socket = new Socket();
-            socket.connect(new InetSocketAddress(hostIp, serverPort), 1000);
+            socket.connect(new InetSocketAddress(hostIp, serverPort), 2000);
 
             DataInputStream dis = new DataInputStream(socket.getInputStream());
             DataOutputStream dos = new DataOutputStream(socket.getOutputStream());

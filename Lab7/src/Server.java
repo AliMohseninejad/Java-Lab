@@ -146,16 +146,19 @@ class ClientHandler implements Runnable {
                 else if (command.equals("connect")) {
                     sendConnectionRequest(decoder.getMessage());
                 }
-                else {
+                else if (command.equals("message")) {
                     // invalid command
                     if (this.recipient == null) {
-                        this.dos.writeUTF("Invalid argument!");
+
                     }
                     // chat
                     else {
-                        System.out.println("\"" + received + "\" said " + this.username + " to " + this.recipient.username);
-                        this.recipient.dos.writeUTF(this.username + ": " + received);
+                        System.out.println("\"" + decoder.getMessage() + "\" said " + this.username + " to " + this.recipient.username);
+                        this.recipient.dos.writeUTF( "[message] " + decoder.getMessage());
                     }
+                }
+                else {
+
                 }
             }
         }
@@ -365,11 +368,12 @@ class ClientHandler implements Runnable {
 
             // connection is established
             System.out.println(username + " is connected to " + reqTo.username);
-            reqTo.dos.writeUTF("[ConnectedTo] " + username);
+            reqTo.dos.writeUTF("[ConnectionFrom] " + username);
             dos.writeUTF("[ConnectedTo] " + reqTo.username);
             this.recipient = reqTo;
             reqTo.recipient = this;
             this.reqTo = null;
+
         }
         // request rejected
         else {

@@ -21,7 +21,7 @@ import java.util.regex.PatternSyntaxException;
 
 public class ConnectToServerActivity extends MyBaseActivity {
 
-    ExecutorService executorService = Executors.newFixedThreadPool(4);
+    public static ExecutorService executorService = Executors.newFixedThreadPool(6);
     GoToAuthenticationActivity goToAuthenticationActivity = new GoToAuthenticationActivity(this);
     public static ClientSocket clientSocket;
     static SocketMessageHandler socketMessageSender = new SocketMessageHandler();
