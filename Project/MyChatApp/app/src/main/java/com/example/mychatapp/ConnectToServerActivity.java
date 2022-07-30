@@ -19,13 +19,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-public class ConnectToServer extends MyBaseActivity {
+public class ConnectToServerActivity extends MyBaseActivity {
 
     ExecutorService executorService = Executors.newFixedThreadPool(4);
     GoToAuthenticationActivity goToAuthenticationActivity = new GoToAuthenticationActivity(this);
-    ClientSocket clientSocket;
-    SocketMessageHandler socketMessageSender = new SocketMessageHandler();
-    SocketMessageHandler socketMessageReceiver = new SocketMessageHandler();
+    public static ClientSocket clientSocket;
+    static SocketMessageHandler socketMessageSender = new SocketMessageHandler();
+    static SocketMessageHandler socketMessageReceiver = new SocketMessageHandler();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,8 +44,8 @@ public class ConnectToServer extends MyBaseActivity {
 
     public class GoToAuthenticationActivity implements Runnable {
 
-        ConnectToServer connectToServer;
-        public GoToAuthenticationActivity(ConnectToServer connectToServer) {
+        ConnectToServerActivity connectToServer;
+        public GoToAuthenticationActivity(ConnectToServerActivity connectToServer) {
             this.connectToServer = connectToServer;
         }
 

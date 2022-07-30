@@ -4,8 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/ASUS/Desktop/Courses/Java Lab/Codes/Project/MyChatApp/app/src/main/res/layout/activity_connect_to_server.xml" value="0.264" />
+        <entry key="..\:/Users/ASUS/Desktop/Courses/Java Lab/Codes/Project/MyChatApp/app/src/main/res/layout/activity_in_chat.xml" value="0.2" />
+        <entry key="..\:/Users/ASUS/Desktop/Courses/Java Lab/Codes/Project/MyChatApp/app/src/main/res/layout/activity_in_chat_other.xml" value="0.21621621621621623" />
         <entry key="..\:/Users/ASUS/Desktop/Courses/Java Lab/Codes/Project/MyChatApp/app/src/main/res/layout/activity_login.xml" value="0.264" />
         <entry key="..\:/Users/ASUS/Desktop/Courses/Java Lab/Codes/Project/MyChatApp/app/src/main/res/layout/activity_main.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/ASUS/Desktop/Courses/Java Lab/Codes/Project/MyChatApp/app/src/main/res/layout/item_chat_me.xml" value="0.21621621621621623" />
       </map>
     </option>
   </component>

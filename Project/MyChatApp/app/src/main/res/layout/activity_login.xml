@@ -31,26 +31,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/Login_SignUpButton"
-        android:layout_width="130dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="54dp"
-        android:layout_marginTop="4dp"
-        android:text="@string/Login_signupB"
-        app:layout_constraintEnd_toStartOf="@+id/Login_SignInButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Login_Password" />
-
-    <Button
-        android:id="@+id/Login_SignInButton"
-        android:layout_width="130dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="54dp"
+        android:id="@+id/Login_EnterButton"
+        android:layout_width="183dp"
+        android:layout_height="61dp"
         android:onClick="signInHandler"
-        android:text="@string/Login_signinB"
+        android:text="@string/Login_enterB"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/Login_SignUpButton"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Login_Password" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

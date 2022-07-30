@@ -22,12 +22,12 @@ public class ClientSocket implements Runnable{
 
     final static int serverPort = 1234;
     private final String hostIp;
-    private final ConnectToServer connectToServer;
+    private final ConnectToServerActivity connectToServer;
     static ClientSocket noGarbageClass;
     SocketMessageHandler socketMessageSender;
     SocketMessageHandler socketMessageReceiver;
 
-    public ClientSocket(String hostIp, ConnectToServer connectToServer, SocketMessageHandler socketMessageSender, SocketMessageHandler socketMessageReceiver) {
+    public ClientSocket(String hostIp, ConnectToServerActivity connectToServer, SocketMessageHandler socketMessageSender, SocketMessageHandler socketMessageReceiver) {
         this.hostIp = hostIp;
         this.connectToServer = connectToServer;
         this.socketMessageSender = socketMessageSender;
@@ -149,9 +149,9 @@ public class ClientSocket implements Runnable{
     private class ConnectionToast implements Runnable {
 
         boolean success;
-        ConnectToServer connectToServer;
+        ConnectToServerActivity connectToServer;
 
-        public ConnectionToast(boolean success, ConnectToServer connectToServer) {
+        public ConnectionToast(boolean success, ConnectToServerActivity connectToServer) {
             this.success = success;
             this.connectToServer = connectToServer;
         }

@@ -11,7 +11,12 @@ public class SocketMessageHandler {
     public String listenAndSend() {
 
         while (message == null) {
+            try {
+                Thread.sleep(100);
+            }
+            catch (InterruptedException e) {
 
+            }
         }
 
         String message_copy = this.message;
