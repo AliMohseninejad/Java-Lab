@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.TextView;
@@ -58,6 +59,7 @@ public class InChatActivity extends MyBaseActivity {
         public void run() {
             while (true) {
                 String received = socketMessageReceiver.listenAndSend();
+                Log.i("Decode", "from sender: " + received);
 
                 MessageDecoder decoded = new MessageDecoder(received);
                 String command = decoded.getCommand();
@@ -79,6 +81,7 @@ public class InChatActivity extends MyBaseActivity {
             @Override
             public void run() {
                 adapter.addMessage(msg, true);
+                Log.i("Decode","display " + msg);
             }
 
         }
